@@ -16,3 +16,6 @@ vendor/
 
 # docker env files
 *.env
+
+# ides
+.idea

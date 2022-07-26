@@ -11,7 +11,7 @@ fi
 
 SOJU_HOST="${SOJU_HOST:-${HOSTNAME}}"
 
-if [[ ! -f /config/soju.cfg ]]; then
+if [[ ! -f /data/soju.cfg ]]; then
     (
         if "${USE_TLS}"; then
             echo "listen ircs://0.0.0.0:${PORT}"
@@ -20,15 +20,16 @@ if [[ ! -f /config/soju.cfg ]]; then
             echo "listen irc+insecure://0.0.0.0:${PORT}"
         fi
         echo "hostname ${SOJU_HOST}"
-        echo "db sqlite3 /config/soju.db"
-    ) > /config/soju.cfg
+        echo "db sqlite3 /data/soju.db"
+    ) > /data/soju.cfg
 fi
 
+# @todo: does not create user
 grep '^user ' <<< "${SOJU_INIT}" | while read -r _ user password admin; do
-    echo "${password}" | /app/sojuctl -config /config/soju.cfg create-user "${user}" "${admin:+-admin}"
+    echo "${password}" | /app/sojuctl -config /data/soju.cfg create-user "${user}" "${admin:+-admin}"
 done
 
-/app/soju -config /config/soju.cfg &
+/app/soju -config /data/soju.cfg &
 
 port_open=false
 
